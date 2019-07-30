@@ -5,11 +5,11 @@ namespace BookBuyer
 {
     class GatherInformation
     {
-        public void GrabInfo(IWebDriver driver)
+        public void GrabBookInfo(IWebDriver driver)
         {
-            var information = driver.FindElement(By.XPath("//*[@id='search-results']/type"));
+            var bookInformation = driver.FindElement(By.XPath("/html/body/div[2]/div[2]/div[2]/div[2]/script"));
 
-            Console.WriteLine(information.ToString());
+            Console.WriteLine(bookInformation.ToString());
         }
     }
 }

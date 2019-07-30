@@ -19,9 +19,14 @@ namespace BookBuyer
 
             //Navigate to KSL page
             navigationPage.NavigateToKslBooksPage(driver);
+            navigationPage.MaximizeBrower(driver);
 
             //Grab the string of all the books
-            infoGrabbingPage.GrabInfo(driver);
+            infoGrabbingPage.GrabBookInfo(driver);
+
+            //Navigate to Book Finder page
+            navigationPage.NewTab(driver);
+            navigationPage.NavigateToBookFinderPage(driver);
 
             //Exit Browser
             navigationPage.ExitBrowser(driver);
