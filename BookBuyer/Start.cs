@@ -3,7 +3,7 @@ using OpenQA.Selenium.Chrome;
 
 namespace BookBuyer
 {
-    class Program
+    class Start
     {
         //Declare variables
         static IWebDriver driver;
@@ -21,11 +21,11 @@ namespace BookBuyer
             navigationPage.NavigateToKslBooksPage(driver);
             navigationPage.MaximizeBrower(driver);
 
-            //Grab the string of all the books
-            infoGrabbingPage.GrabBookInfo(driver);
+            //Grab the string of all the books **BROKEN**
+     //       infoGrabbingPage.GrabBookInfo(driver);
 
-            //Navigate to Book Finder page
-            navigationPage.NewTab(driver);
+            //Navigate to Book Finder page **BROKEN**
+            navigationPage.NewTab(driver, 1);        
             navigationPage.NavigateToBookFinderPage(driver);
 
             //Exit Browser

@@ -17,9 +17,13 @@ namespace BookBuyer
         }
 
         //Opens a new tab
-        public void NewTab(IWebDriver driver)
+        public void NewTab(IWebDriver driver, int tabNumber)
         {
-            
+            ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
+
+            var newTab = driver.WindowHandles[tabNumber];
+
+            driver.SwitchTo().Window(newTab);
         }
 
         //Maximizes the browser
@@ -31,7 +35,10 @@ namespace BookBuyer
         //Closes Google Chrome
         public void ExitBrowser(IWebDriver driver)
         {
-            driver.Close();
+           // while(driver.WindowHandles.Count != 0)
+           // {
+                driver.Quit();
+          //  }
         }
     }
 }
