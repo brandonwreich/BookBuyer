@@ -16,12 +16,12 @@ namespace BookBuyer
             driver.Navigate().GoToUrl("https://www.bookfinder.com/buyback/");
         }
 
-        //Opens a new tab
-        public void NewTab(IWebDriver driver, int tabNumber)
+        //Opens a new tab and switches the driver to that tab
+        public void NewTab(IWebDriver driver)
         {
             ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
 
-            var newTab = driver.WindowHandles[tabNumber];
+            var newTab = driver.WindowHandles[driver.WindowHandles.Count - 1];
 
             driver.SwitchTo().Window(newTab);
         }
@@ -35,10 +35,7 @@ namespace BookBuyer
         //Closes Google Chrome
         public void ExitBrowser(IWebDriver driver)
         {
-           // while(driver.WindowHandles.Count != 0)
-           // {
-                driver.Quit();
-          //  }
+            driver.Quit();
         }
     }
 }
