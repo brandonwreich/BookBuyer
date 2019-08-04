@@ -11,10 +11,10 @@ namespace BookBuyer
         static void Main(string[] args)
         {
             //Init varibales
-            driver = new ChromeDriver("C:\\Users\\brand\\source\\repos\\BookBuyer");
+            driver = new ChromeDriver("C:\\Users\\knigh\\source\\repos\\BookBuyer");
             string[] bookTitles = new string[] { "Mindware: An introduction to the philosophy of Cognitive Science",
             "Studio Companion Series Design Basics: 1st Edition" };
-            int[] bookIsbn = new int[1000];
+            string[] bookIsbn = new string[1000];
             int count = 0;
 
             //Init pages
@@ -32,8 +32,7 @@ namespace BookBuyer
             //Find ISBN **BROKEN**
             while (count < bookTitles.Length)
             {
-                infoGrabbingPage.findIsbn(driver, bookTitles[count], "");
-
+                bookIsbn[count] = infoGrabbingPage.FindIsbn(driver, bookTitles[count], "");
 
 
                 count++;
@@ -45,6 +44,11 @@ namespace BookBuyer
             //Navigate to Book Finder page
             navigationPage.NewTab(driver);
             navigationPage.NavigateToBookFinderPage(driver);
+
+            while (count <= bookIsbn.Length)
+            {
+                bookIsbn[count].Replace(bookIsbn[count], null);
+            }
 
             //Exit Browser
             navigationPage.ExitBrowser(driver);
