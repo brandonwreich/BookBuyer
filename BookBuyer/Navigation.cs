@@ -10,6 +10,14 @@ namespace BookBuyer
             driver.Navigate().GoToUrl("https://classifieds.ksl.com/s/Books+and+Media/Books:+Education+and+College");
         }
 
+        //Navigates to the next page of search results
+        public void NextKslPage(IWebDriver driver, int pageCount)
+        {
+            IWebElement nextButton = driver.FindElement(By.XPath("//a[starts-with(@href, '/search/index?page=" + pageCount + "')]"));
+
+            nextButton.Click();
+        }
+
         //Navigates to the ISBN search page
         public void NavigateToIsbnSearchPage(IWebDriver driver)
         {

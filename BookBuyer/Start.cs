@@ -1,5 +1,7 @@
-﻿using OpenQA.Selenium;
+﻿using BookBuyer.Model;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using System.Collections.Generic;
 
 namespace BookBuyer
 {
@@ -12,9 +14,8 @@ namespace BookBuyer
         {
             //Init varibales
             driver = new ChromeDriver("C:\\Users\\knigh\\source\\repos\\BookBuyer");
-            string[] bookTitles = new string[] { "Mindware: An introduction to the philosophy of Cognitive Science",
-            "Studio Companion Series Design Basics: 1st Edition" };
-            string[] bookIsbn = new string[1000];
+            List<List<Listing>> pageListings = new List<List<Listing>>();
+            int pageCount = 1;
             int count = 0;
 
             //Init pages
@@ -25,30 +26,30 @@ namespace BookBuyer
             navigationPage.NavigateToKslBooksPage(driver);
             navigationPage.MaximizeBrower(driver);
 
-            //Navigate to ISBN search page
-            navigationPage.NewTab(driver);
-            navigationPage.NavigateToIsbnSearchPage(driver);
+            //Find next page link
+            IWebElement nextLink = driver.FindElement(By.XPath("//a[starts-with(@href, '/search/index?page=" + pageCount + "')]"));
 
-            //Find ISBN **BROKEN**
-            while (count < bookTitles.Length)
+            //Grab the string of all the books on all pages
+            try
             {
-                bookIsbn[count] = infoGrabbingPage.FindIsbn(driver, bookTitles[count], "");
+                //While there is stil a next page
+                while (nextLink.Enabled)
+                {
+                    //Grab book information
+                    pageListings.Insert(count, infoGrabbingPage.GrabBookInfo(driver));
 
+                    //Go to next page and increase pageCount
+                    navigationPage.NextKslPage(driver, pageCount);
+                    pageCount++;
 
-                count++;
+                    //Refind nextLink
+                    nextLink = driver.FindElement(By.XPath("//a[starts-with(@href, '/search/index?page=" + pageCount + "')]"));
+
+                    //Increase count
+                    count++;
+                }
             }
-
-            //Grab the string of all the books **BROKEN**
-            //       infoGrabbingPage.GrabBookInfo(driver);
-
-            //Navigate to Book Finder page
-            navigationPage.NewTab(driver);
-            navigationPage.NavigateToBookFinderPage(driver);
-
-            while (count <= bookIsbn.Length)
-            {
-                bookIsbn[count].Replace(bookIsbn[count], null);
-            }
+            catch (NoSuchElementException) { }
 
             //Exit Browser
             navigationPage.ExitBrowser(driver);
