@@ -18,6 +18,13 @@ namespace BookBuyer
             nextButton.Click();
         }
 
+        public IWebElement FindNextLink(IWebDriver driver, int pageCount)
+        {
+            IWebElement nextButton = driver.FindElement(By.XPath("//a[starts-with(@href, '/search/index?page=" + pageCount + "')]"));
+
+            return nextButton;
+        }
+
         //Navigates to the ISBN search page
         public void NavigateToIsbnSearchPage(IWebDriver driver)
         {

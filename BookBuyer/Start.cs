@@ -27,7 +27,7 @@ namespace BookBuyer
             navigationPage.MaximizeBrower(driver);
 
             //Find next page link
-            IWebElement nextLink = driver.FindElement(By.XPath("//a[starts-with(@href, '/search/index?page=" + pageCount + "')]"));
+            IWebElement nextLink = navigationPage.FindNextLink(driver, pageCount);
 
             //Grab the string of all the books on all pages
             try
@@ -43,7 +43,7 @@ namespace BookBuyer
                     pageCount++;
 
                     //Refind nextLink
-                    nextLink = driver.FindElement(By.XPath("//a[starts-with(@href, '/search/index?page=" + pageCount + "')]"));
+                    nextLink = navigationPage.FindNextLink(driver, pageCount);
 
                     //Increase count
                     count++;
