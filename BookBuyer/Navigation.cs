@@ -7,7 +7,7 @@ namespace BookBuyer
         //Opens up Google Chrome and navigates the the KSL classifieds book section
         public void NavigateToKslBooksPage(IWebDriver driver)
         {
-            driver.Navigate().GoToUrl("https://classifieds.ksl.com/s/Books+and+Media/Books:+Education+and+College");
+            driver.Navigate().GoToUrl("https://classifieds.ksl.com/s/Books+and+Media/Books:+Education+and+College?perPage=96");
         }
 
         //Navigates to the next page of search results
