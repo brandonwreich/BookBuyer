@@ -1,6 +1,7 @@
 ﻿using BookBuyer.Model;
 using Newtonsoft.Json;
 using OpenQA.Selenium;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -12,6 +13,8 @@ namespace BookBuyer
         {
             //Init variables
             Regex regex = new Regex(@"\[{.*}\]");
+
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
 
             //Grab information
             IWebElement bookInformation = driver.FindElement(By.XPath("//script[contains(.,'window.renderSearchSection')]"));

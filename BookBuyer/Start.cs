@@ -1,6 +1,7 @@
 ﻿using BookBuyer.Model;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -29,14 +30,11 @@ namespace BookBuyer
             navigationPage.NavigateToKslBooksPage(driver);
             navigationPage.MaximizeBrower(driver);
 
-            //Find next page link
-            IWebElement nextLink = navigationPage.FindNextLink(driver, pageCount);
-
             //Grab the string of all the books on all pages
             try
             {
                 //While there is stil a next page
-                while (pageCount<11)
+                while (pageCount<18)
                 {
                     //Grab book information
                     pageListings.AddRange(infoGrabbingPage.GrabBookInfo(driver));
@@ -44,11 +42,8 @@ namespace BookBuyer
                     //Go to next page and increase pageCount
                     navigationPage.NextKslPage(driver, pageCount);
                     pageCount++;
-
-                    //Refind nextLink
-                    nextLink = navigationPage.FindNextLink(driver, pageCount);
-
-                    //Increase count
+                
+                   //Increase count
                     count++;
                 }
             }

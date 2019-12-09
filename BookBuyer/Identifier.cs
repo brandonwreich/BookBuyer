@@ -44,7 +44,6 @@ namespace BookBuyer
                         listing.Isbn = isbnReg.Match(raw2).ToString();
                         listing.Isbn13 = isbn13Reg.Match(raw2).ToString();
                     }
-                    
                 }
                 
                 var isbn = listing.Isbn == null? listing.Isbn13: listing.Isbn;
@@ -72,14 +71,14 @@ namespace BookBuyer
                             }
                         }
                     }
-                    
-            
                 }
-                var result = $"Listing: {listing.Title}, Found: {listing.FoundBookTitle?? "NOT FOUND"}, OfferTitle:{listing.OfferBookTitle}, Price: {listing.Price}, Offer: {listing.HighestOffer}, Profit:{listing.HighestOffer-listing.Price}";
-                Console.WriteLine(result);
-                file.WriteLine(result);
 
-                
+                if (listing.HighestOffer - listing.Price > 0)
+                {
+                    var result = $"Listing: {listing.Title}, Found: {listing.FoundBookTitle ?? "NOT FOUND"}, OfferTitle:{listing.OfferBookTitle}, Price: {listing.Price}, Offer: {listing.HighestOffer}, Profit:{listing.HighestOffer - listing.Price}";
+                    Console.WriteLine(result);
+                    file.WriteLine(result);
+                }
             }
         }
     }
