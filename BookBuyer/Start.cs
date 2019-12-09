@@ -2,6 +2,8 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace BookBuyer
 {
@@ -13,8 +15,9 @@ namespace BookBuyer
         static void Main(string[] args)
         {
             //Init varibales
-            driver = new ChromeDriver("C:\\Users\\knigh\\source\\repos\\BookBuyer");
-            List<List<Listing>> pageListings = new List<List<Listing>>();
+            driver = new ChromeDriver(Directory.GetCurrentDirectory());
+            List<Listing> pageListings = new List<Listing>();
+        
             int pageCount = 1;
             int count = 0;
 
@@ -33,10 +36,10 @@ namespace BookBuyer
             try
             {
                 //While there is stil a next page
-                while (nextLink.Enabled)
+                while (pageCount<11)
                 {
                     //Grab book information
-                    pageListings.Insert(count, infoGrabbingPage.GrabBookInfo(driver));
+                    pageListings.AddRange(infoGrabbingPage.GrabBookInfo(driver));
 
                     //Go to next page and increase pageCount
                     navigationPage.NextKslPage(driver, pageCount);
@@ -51,6 +54,8 @@ namespace BookBuyer
             }
             catch (NoSuchElementException) { }
 
+            
+            Task.WaitAll(Identifier.GetBookDetails(pageListings));
             //Exit Browser
             navigationPage.ExitBrowser(driver);
         }

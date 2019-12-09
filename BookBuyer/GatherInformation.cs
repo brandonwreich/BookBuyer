@@ -21,9 +21,9 @@ namespace BookBuyer
             var info = regex.Match(text).ToString();
 
             //Convert to Json object
-            var wantedInfo = JsonConvert.DeserializeObject<List<Listing>>(info);
+            var listings = JsonConvert.DeserializeObject<List<Listing>>(info);
 
-            return wantedInfo;
+            return listings;
         }
     }
 }
