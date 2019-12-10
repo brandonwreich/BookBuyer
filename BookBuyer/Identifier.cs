@@ -17,6 +17,8 @@ namespace BookBuyer
         static string key = "3pYHYcs0rIF2KDFDvEq1oQ";
         public static async Task GetBookDetails(List<Listing> listings)
         {
+            decimal totalProfit = 0;
+
             file.AutoFlush = true;
             
             foreach(var listing in listings)
@@ -73,13 +75,21 @@ namespace BookBuyer
                     }
                 }
 
-                if (listing.HighestOffer - listing.Price > 0)
+                if (listing.FoundBookTitle != null)
                 {
-                    var result = $"Listing: {listing.Title}, Found: {listing.FoundBookTitle ?? "NOT FOUND"}, OfferTitle:{listing.OfferBookTitle}, Price: {listing.Price}, Offer: {listing.HighestOffer}, Profit:{listing.HighestOffer - listing.Price}";
-                    Console.WriteLine(result);
-                    file.WriteLine(result);
+                    if (listing.HighestOffer - listing.Price > 0)
+                    {
+                        var result = $"Listing: {listing.Title}, Found: {listing.FoundBookTitle ?? "NOT FOUND"}, OfferTitle:{listing.OfferBookTitle}, Price: {listing.Price}, Offer: {listing.HighestOffer}, Profit:{listing.HighestOffer - listing.Price}";
+                        Console.WriteLine("");
+                        Console.WriteLine(result);
+                        file.WriteLine(result);
+
+                        totalProfit += (listing.HighestOffer - listing.Price);
+                    }
                 }
             }
+
+            Console.WriteLine(totalProfit);
         }
     }
 }

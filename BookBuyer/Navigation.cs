@@ -9,8 +9,6 @@ namespace BookBuyer
         public void NavigateToKslBooksPage(IWebDriver driver)
         {
             driver.Navigate().GoToUrl("https://classifieds.ksl.com/s/Books+and+Media/Books:+Education+and+College?perPage=96");
-
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
         }
 
         //Navigates to the next page of search results
@@ -18,7 +16,14 @@ namespace BookBuyer
         {
             IWebElement nextButton = driver.FindElement(By.XPath("//a[starts-with(@href, '/search/index?page=" + pageCount + "')]"));
 
-            nextButton.Click();
+            try
+            {
+                nextButton.Click();
+            }
+            catch (StaleElementReferenceException)
+            {
+                nextButton.Click();
+            }
 
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
         }
@@ -30,9 +35,6 @@ namespace BookBuyer
         }
 
         //Closes Google Chrome
-        public void ExitBrowser(IWebDriver driver)
-        {
-            driver.Quit();
-        }
+        public void ExitBrowser(IWebDriver driver) => driver.Quit();
     }
 }

@@ -14,11 +14,18 @@ namespace BookBuyer
             //Init variables
             Regex regex = new Regex(@"\[{.*}\]");
 
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
-
             //Grab information
             IWebElement bookInformation = driver.FindElement(By.XPath("//script[contains(.,'window.renderSearchSection')]"));
-            var text = bookInformation.GetAttribute("innerText");
+
+            string text;
+            try
+            {
+                text = bookInformation.GetAttribute("innerText");
+            }
+            catch (StaleElementReferenceException)
+            {
+                text = bookInformation.GetAttribute("innerText");
+            }
 
             //Grab the wanted string
             var info = regex.Match(text).ToString();
