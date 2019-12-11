@@ -2,24 +2,18 @@
 {
     public class Listing
     {
-        //Grabs the title of the ad
+        //Title
         public string Title { get; set; }
       
+        //Price
         public decimal Price { get; set; }
       
+        //City
         public string City { get; set; }
 
-        //Grabs the name of the vendor
+        //Name of Vendor
         public string Name { get; set; }
 
-        //Grabs the home phone number of the vendor
-        public string HomeNumber { get; set; }
-
-        //Grabs the cell phone number of the vendor
-        public string CellNumber { get; set; }
-
-        //Grabs the email of the vendor
-        public string EmailCanonical { get; set; }
         public string FoundBookTitle { get; set; }
         public string OfferBookTitle {get; set;}
         public string Author { get; set; }

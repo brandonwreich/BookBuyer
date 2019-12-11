@@ -13,19 +13,45 @@ namespace BookBuyer
         {
             //Init variables
             Regex regex = new Regex(@"\[{.*}\]");
+            IWebElement bookInformation = null;
+            string text = "";
+            int attempts = 0;
+
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(60);
 
             //Grab information
-            IWebElement bookInformation = driver.FindElement(By.XPath("//script[contains(.,'window.renderSearchSection')]"));
+            while (bookInformation == null || attempts < 100)
+            {
+                try
+                {
+                    bookInformation = driver.FindElement(By.XPath("//script[contains(.,'window.renderSearchSection')]"));
+                    attempts += 100;
+                }
+                catch (NoSuchElementException) { }
 
-            string text;
-            try
-            {
-                text = bookInformation.GetAttribute("innerText");
+                attempts++;
             }
-            catch (StaleElementReferenceException)
+
+            attempts = 0;
+
+            while (text.Equals("") || attempts < 100)
             {
-                text = bookInformation.GetAttribute("innerText");
+                try
+                {
+                    text = bookInformation.GetAttribute("innerText");
+                    attempts += 100;
+                }
+                catch (StaleElementReferenceException) { }
+
+                attempts++;
+
+                if (attempts == 100)
+                {
+                    text = "Skip";
+                }
             }
+
+            attempts = 0;
 
             //Grab the wanted string
             var info = regex.Match(text).ToString();

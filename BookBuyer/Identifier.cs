@@ -17,8 +17,6 @@ namespace BookBuyer
         static string key = "3pYHYcs0rIF2KDFDvEq1oQ";
         public static async Task GetBookDetails(List<Listing> listings)
         {
-            decimal totalProfit = 0;
-
             file.AutoFlush = true;
             
             foreach(var listing in listings)
@@ -61,7 +59,7 @@ namespace BookBuyer
                         var jobject = JObject.Parse(raw3);
                         listing.OfferBookTitle = jobject.GetValue("title").ToString();
                         var offers = jobject.GetValue("offers");
-                        
+
                         var test1 = offers.Children();
                         foreach (var child in offers.Children().ToList())
                         {
@@ -75,21 +73,14 @@ namespace BookBuyer
                     }
                 }
 
-                if (listing.FoundBookTitle != null)
+                if (listing.HighestOffer - listing.Price > 0)
                 {
-                    if (listing.HighestOffer - listing.Price > 0)
-                    {
-                        var result = $"Listing: {listing.Title}, Found: {listing.FoundBookTitle ?? "NOT FOUND"}, OfferTitle:{listing.OfferBookTitle}, Price: {listing.Price}, Offer: {listing.HighestOffer}, Profit:{listing.HighestOffer - listing.Price}";
-                        Console.WriteLine("");
-                        Console.WriteLine(result);
-                        file.WriteLine(result);
-
-                        totalProfit += (listing.HighestOffer - listing.Price);
-                    }
+                    var result = $"Listing: {listing.Title}, Found: {listing.FoundBookTitle ?? "NOT FOUND"}, OfferTitle:{listing.OfferBookTitle}, Price: {listing.Price}, Offer: {listing.HighestOffer}, Profit:{listing.HighestOffer - listing.Price}";
+                    Console.WriteLine("");
+                    Console.WriteLine(result);
+                    file.WriteLine(result);
                 }
             }
-
-            Console.WriteLine(totalProfit);
         }
     }
 }
