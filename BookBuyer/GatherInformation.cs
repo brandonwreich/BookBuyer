@@ -12,9 +12,11 @@ namespace BookBuyer
         {
             //Init variables
             Regex regex = new Regex(@"\[{.*}\]");
+            string bookInformationXpath = "//script[contains(.,'window.renderSearchSection')]";
 
             //Find information
-            IWebElement bookInformation = driver.FindElement(By.XPath("//script[contains(.,'window.renderSearchSection')]"));
+            driver.WaitTillVisible(By.XPath(bookInformationXpath), 100);
+            IWebElement bookInformation = driver.FindElement(By.XPath(bookInformationXpath), 100);
 
             //Grab information
             var text = bookInformation.GetAttribute("innerText");
