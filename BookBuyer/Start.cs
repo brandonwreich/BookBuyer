@@ -17,7 +17,6 @@ namespace BookBuyer
             //Init varibales
             driver = new ChromeDriver(Directory.GetCurrentDirectory());
             List<Listing> pageListings = new List<Listing>();
-
             int pageCount = 1;
 
             //Init pages
