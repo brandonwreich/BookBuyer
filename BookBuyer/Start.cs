@@ -1,7 +1,6 @@
 ﻿using BookBuyer.Model;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -20,7 +19,6 @@ namespace BookBuyer
             List<Listing> pageListings = new List<Listing>();
 
             int pageCount = 1;
-            int count = 0;
 
             //Init pages
             Navigation navigationPage = new Navigation();
@@ -30,7 +28,6 @@ namespace BookBuyer
             navigationPage.NavigateToKslBooksPage(driver);
             navigationPage.MaximizeBrower(driver);
 
-            //Grab the string of all the books on all pages
             //While there is stil a next page
             while (pageCount < 18)
             {
@@ -40,9 +37,6 @@ namespace BookBuyer
                 //Go to next page and increase pageCount
                 navigationPage.NextKslPage(driver, pageCount);
                 pageCount++;
-
-                //Increase count
-                count++;
             }
 
             Task.WaitAll(Identifier.GetBookDetails(pageListings));

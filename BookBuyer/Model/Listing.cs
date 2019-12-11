@@ -14,13 +14,27 @@
         //Name of Vendor
         public string Name { get; set; }
 
+        //Title of found book
         public string FoundBookTitle { get; set; }
+
+        //Offer for book
         public string OfferBookTitle {get; set;}
+
+        //Author of book
         public string Author { get; set; }
+
+        //Isbn of book
         public string Isbn { get; set; }
+
+        //Isbn13 of book
         public string Isbn13 { get; set; }
+
         int Confidence { get; set; }
+
+        //Highest offer for book
         public decimal HighestOffer { get; set;}
+
+        //Vendor giving highest offer
         public string HighestOfferName {get; set;}
     }
 }
