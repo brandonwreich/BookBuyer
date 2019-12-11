@@ -14,7 +14,7 @@ namespace BookBuyer
 
             //Find nextButton
             driver.WaitTillVisible(By.XPath(nextButtonXpath), 100);
-            IWebElement nextButton = driver.FindElement(By.XPath(nextButtonXpath), 100);
+            IWebElement nextButton = driver.FindElement(By.XPath(nextButtonXpath));
 
             //Click
             nextButton.Click();

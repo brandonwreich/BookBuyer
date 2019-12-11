@@ -15,7 +15,7 @@ namespace BookBuyer
             string bookInformationXpath = "//script[contains(.,'window.renderSearchSection')]";
 
             //Find information
-            driver.WaitTillVisible(By.XPath(bookInformationXpath), 100);
+            driver.WaitToBeReady(By.XPath(bookInformationXpath), 100);
             IWebElement bookInformation = driver.FindElement(By.XPath(bookInformationXpath), 100);
 
             //Grab information
