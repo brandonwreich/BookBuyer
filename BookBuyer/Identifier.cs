@@ -79,8 +79,8 @@ namespace BookBuyer
                 }
 
                 //If listing makes profit
-         //       if (listing.HighestOffer - listing.Price > 0)
-         //       {
+                if (listing.HighestOffer - listing.Price > 0)
+                {
                     //Init
                     var result = $"Listing: {listing.Title}, Found: {listing.FoundBookTitle ?? "NOT FOUND"}, OfferTitle:{listing.OfferBookTitle}, Price: {listing.Price}, Offer: {listing.HighestOffer}, Profit:{listing.HighestOffer - listing.Price}";
                     
@@ -88,7 +88,7 @@ namespace BookBuyer
                     Console.WriteLine("");
                     Console.WriteLine(result);
                     file.WriteLine(result);
-         //       }
+                }
             }
         }
     }
