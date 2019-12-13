@@ -11,13 +11,36 @@ namespace BookBuyer
         public void NextKslPage(IWebDriver driver, int pageCount)
         {
             string nextButtonXpath = "//a[starts-with(@href, '/search/index?page=" + pageCount + "')]";
+            IWebElement nextButton = null;
 
-            //Find nextButton
-            driver.WaitTillVisible(By.XPath(nextButtonXpath), 100);
-            IWebElement nextButton = driver.FindElement(By.XPath(nextButtonXpath));
+            try
+            {
+                //Find nextButton
+                driver.WaitTillVisible(By.XPath(nextButtonXpath), 100);
+                nextButton = driver.FindElement(By.XPath(nextButtonXpath));
 
-            //Click
-            nextButton.Click();
+                //Click
+                driver.WaitToBeClickable(By.XPath(nextButtonXpath), 100);
+                nextButton.Click();
+            }
+            catch (StaleElementReferenceException)
+            {
+                //Refind element
+                nextButton = driver.FindElement(By.XPath(nextButtonXpath));
+
+                //Click
+                driver.WaitToBeClickable(By.XPath(nextButtonXpath), 100);
+                nextButton.Click();
+            }
+            catch (NoSuchElementException)
+            {
+                //Refind element
+                nextButton = driver.FindElement(By.XPath(nextButtonXpath));
+
+                //Click
+                driver.WaitToBeClickable(By.XPath(nextButtonXpath), 100);
+                nextButton.Click();
+            }
         }
 
         //Maximizes the browser

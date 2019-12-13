@@ -85,7 +85,6 @@ namespace BookBuyer
                     var result = $"Listing: {listing.Title}, Found: {listing.FoundBookTitle ?? "NOT FOUND"}, OfferTitle:{listing.OfferBookTitle}, Price: {listing.Price}, Offer: {listing.HighestOffer}, Profit:{listing.HighestOffer - listing.Price}";
                     
                     //Write listing
-                    Console.WriteLine("");
                     Console.WriteLine(result);
                     file.WriteLine(result);
                 }

@@ -16,13 +16,24 @@ namespace BookBuyer
                 var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
 
                 //Set ignored exceptions
-                wait.IgnoreExceptionTypes(typeof(NoSuchElementException), 
-                    typeof(ElementNotVisibleException), 
-                    typeof(StaleElementReferenceException), 
+                wait.IgnoreExceptionTypes(typeof(NoSuchElementException),
+                    typeof(ElementNotVisibleException),
+                    typeof(StaleElementReferenceException),
                     typeof(WebDriverException));
 
                 //Wait and find
-                return wait.Until(drv => drv.FindElement(by));
+                try
+                {
+                    return wait.Until(drv => drv.FindElement(by));
+                }
+                catch (WebDriverTimeoutException)
+                {
+                    return driver.FindElement(by);
+                }
+                catch (NoSuchElementException)
+                {
+                    return driver.FindElement(by);
+                }
             }
 
             //Find element
@@ -45,6 +56,7 @@ namespace BookBuyer
             wait.Until(ExpectedConditions.ElementIsVisible(by));
         }
 
+        //Waits for element to be ready or until timout has expired
         public static void WaitToBeReady(this IWebDriver driver, By by, int timeoutInSeconds)
         {
             //Init
@@ -58,6 +70,22 @@ namespace BookBuyer
 
             //Wait
             wait.Until(ExpectedConditions.ElementExists(by));
+        }
+
+        //Waits for element to be clickable or until timeout has expired
+        public static void WaitToBeClickable(this IWebDriver driver, By by, int timeoutInSeconds)
+        {
+            //Init
+            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
+
+            //Set ignored exceptions
+            wait.IgnoreExceptionTypes(typeof(NoSuchElementException),
+                    typeof(ElementNotVisibleException),
+                    typeof(StaleElementReferenceException),
+                    typeof(WebDriverException));
+
+            //Wait
+            wait.Until(ExpectedConditions.ElementToBeClickable(by));
         }
     }
 }

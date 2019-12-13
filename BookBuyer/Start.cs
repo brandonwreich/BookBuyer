@@ -1,6 +1,7 @@
 ﻿using BookBuyer.Model;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -14,8 +15,16 @@ namespace BookBuyer
 
         static void Main(string[] args)
         {
-            //Init varibales
-            driver = new ChromeDriver(Directory.GetCurrentDirectory());
+            //Init varibles
+            try
+            {
+                driver = new ChromeDriver(Directory.GetCurrentDirectory());
+            }
+            catch(InvalidOperationException)
+            {
+                driver = new ChromeDriver(@"C:\Users\knigh\source\repos\BookBuyer");
+            }
+
             List<Listing> pageListings = new List<Listing>();
             int pageCount = 1;
 
@@ -28,7 +37,7 @@ namespace BookBuyer
             navigationPage.MaximizeBrower(driver);
 
             //While there is stil a next page
-            while (pageCount < 18)
+            while (pageCount < 71)
             {
                 //Grab book information
                 pageListings.AddRange(infoGrabbingPage.GrabBookInfo(driver));

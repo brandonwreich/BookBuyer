@@ -16,10 +16,18 @@ namespace BookBuyer
 
             //Find information
             driver.WaitToBeReady(By.XPath(bookInformationXpath), 100);
-            IWebElement bookInformation = driver.FindElement(By.XPath(bookInformationXpath), 100);
+            IWebElement bookInformation = driver.FindElement(By.XPath(bookInformationXpath));
 
             //Grab information
-            var text = bookInformation.GetAttribute("innerText");
+            var text = "";
+            try
+            {
+                text = bookInformation.GetAttribute("innerText");
+            }
+            catch(StaleElementReferenceException)
+            {
+                text = bookInformation.GetAttribute("innerText");
+            }
 
             //Grab the wanted string
             var info = regex.Match(text).ToString();
