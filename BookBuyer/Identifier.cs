@@ -104,9 +104,9 @@ namespace BookBuyer
                         Console.WriteLine("");
                         Console.WriteLine(result);
                         file.WriteLine(result);
-                    }
 
-                    totalProfit += listing.HighestOffer - listing.Price;
+                        totalProfit += listing.HighestOffer - listing.Price;
+                    }
                 }
             }
 
