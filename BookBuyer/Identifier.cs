@@ -97,7 +97,8 @@ namespace BookBuyer
                         listing.City.Equals("Riverton", StringComparison.InvariantCultureIgnoreCase) ||
                         listing.City.Equals("Orem", StringComparison.InvariantCultureIgnoreCase) ||
                         listing.City.Equals("Provo", StringComparison.InvariantCultureIgnoreCase) ||
-                        listing.City.Equals("American Fork", StringComparison.InvariantCultureIgnoreCase))
+                        listing.City.Equals("American Fork", StringComparison.InvariantCultureIgnoreCase) ||
+                        listing.City.Equals("Cedar Hills", StringComparison.InvariantCultureIgnoreCase))
                     {
                         //Write listing
                         Console.WriteLine("");
