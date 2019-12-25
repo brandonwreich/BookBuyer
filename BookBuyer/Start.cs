@@ -37,7 +37,7 @@ namespace BookBuyer
             navigationPage.MaximizeBrower(driver);
 
             //While there is stil a next page
-            while (pageCount < 71)
+            while (pageCount < 83)
             {
                 //Grab book information
                 pageListings.AddRange(infoGrabbingPage.GrabBookInfo(driver));
@@ -45,6 +45,13 @@ namespace BookBuyer
                 //Go to next page and increase pageCount
                 navigationPage.NextKslPage(driver, pageCount);
                 pageCount++;
+
+                //Wait for 5 Seconds
+                try
+                {
+                    driver.WaitToBeReady(By.XPath(""), 5);
+                }
+                catch (Exception e) { }
             }
 
             Task.WaitAll(Identifier.GetBookDetails(pageListings));

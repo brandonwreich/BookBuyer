@@ -17,6 +17,7 @@ namespace BookBuyer
         static string key = "3pYHYcs0rIF2KDFDvEq1oQ";
         public static async Task GetBookDetails(List<Listing> listings)
         {
+            decimal totalProfit = 0;
             file.AutoFlush = true;
             
             foreach(var listing in listings)
@@ -25,7 +26,7 @@ namespace BookBuyer
                 var encoded = HttpUtility.UrlEncode(listing.Title);
                 var response = await httpClient.GetAsync($"https://www.goodreads.com/search?q={encoded}&key={key}");
                 var id = "";
-                var isbn = listing.Isbn == null ? listing.Isbn13 : listing.Isbn;
+                
                 listing.HighestOffer = 0;
 
                 if (response.IsSuccessStatusCode)
@@ -50,6 +51,8 @@ namespace BookBuyer
                         listing.Isbn13 = isbn13Reg.Match(raw2).ToString();
                     }
                 }
+
+                var isbn = listing.Isbn == null ? listing.Isbn13 : listing.Isbn;
 
                 if (isbn != null && isbn != "")
                 {
@@ -78,17 +81,36 @@ namespace BookBuyer
                     }
                 }
 
+                var result = $"Listing: {listing.Title}, " + 
+                    $"Isbn: {listing.Isbn}, " + 
+                    $"City: {listing.City}, " + 
+                    $"Price: {listing.Price}, " + 
+                    $"Offer: {listing.HighestOffer}, " + 
+                    $"Profit:{listing.HighestOffer - listing.Price}";
+
                 //If listing makes profit
                 if (listing.HighestOffer - listing.Price > 0)
                 {
-                    //Init
-                    var result = $"Listing: {listing.Title}, Found: {listing.FoundBookTitle ?? "NOT FOUND"}, OfferTitle:{listing.OfferBookTitle}, Price: {listing.Price}, Offer: {listing.HighestOffer}, Profit:{listing.HighestOffer - listing.Price}";
-                    
-                    //Write listing
-                    Console.WriteLine(result);
-                    file.WriteLine(result);
+                    if (listing.City.Equals("Sandy", StringComparison.InvariantCultureIgnoreCase) ||
+                        listing.City.Equals("Drpaer", StringComparison.InvariantCultureIgnoreCase) ||
+                        listing.City.Equals("Salt Lake City", StringComparison.InvariantCultureIgnoreCase) ||
+                        listing.City.Equals("Riverton", StringComparison.InvariantCultureIgnoreCase) ||
+                        listing.City.Equals("Orem", StringComparison.InvariantCultureIgnoreCase) ||
+                        listing.City.Equals("Provo", StringComparison.InvariantCultureIgnoreCase) ||
+                        listing.City.Equals("American Fork", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        //Write listing
+                        Console.WriteLine("");
+                        Console.WriteLine(result);
+                        file.WriteLine(result);
+                    }
+
+                    totalProfit += listing.HighestOffer - listing.Price;
                 }
             }
+
+            Console.WriteLine("");
+            Console.WriteLine(totalProfit);
         }
     }
 }
