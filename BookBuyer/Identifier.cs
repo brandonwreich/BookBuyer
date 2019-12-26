@@ -15,8 +15,13 @@ namespace BookBuyer
     {
         static StreamWriter file = File.CreateText("./results.txt");
         static string key = "3pYHYcs0rIF2KDFDvEq1oQ";
+
         public static async Task GetBookDetails(List<Listing> listings)
         {
+             List<String> cityList = new List<string> { "Sandy", "Draper", "Millcreek", "Highland", "slc", "South Jordan",
+            "Saratoga Springs", "Midvale", "S Jordan", "Alpine", "Cedar Hills", "Bluffdale", "West Jordan", "Salt Lake City",
+            "Riverton", "Orem", "Provo", "American Fork" };
+
             decimal totalProfit = 0;
             file.AutoFlush = true;
             
@@ -68,7 +73,7 @@ namespace BookBuyer
                         var offers = jobject.GetValue("offers");
                         var test1 = offers.Children();
 
-                        foreach (var child in offers.Children().ToList())
+                        foreach(var child in offers.Children().ToList())
                         {
                             var test = child.Children().FirstOrDefault();
 
@@ -91,25 +96,23 @@ namespace BookBuyer
                 //If listing makes profit
                 if (listing.HighestOffer - listing.Price > 0)
                 {
-                    if (listing.City.Equals("Sandy", StringComparison.InvariantCultureIgnoreCase) ||
-                        listing.City.Equals("Drpaer", StringComparison.InvariantCultureIgnoreCase) ||
-                        listing.City.Equals("Salt Lake City", StringComparison.InvariantCultureIgnoreCase) ||
-                        listing.City.Equals("Riverton", StringComparison.InvariantCultureIgnoreCase) ||
-                        listing.City.Equals("Orem", StringComparison.InvariantCultureIgnoreCase) ||
-                        listing.City.Equals("Provo", StringComparison.InvariantCultureIgnoreCase) ||
-                        listing.City.Equals("American Fork", StringComparison.InvariantCultureIgnoreCase) ||
-                        listing.City.Equals("Cedar Hills", StringComparison.InvariantCultureIgnoreCase))
+                    foreach(string city in cityList)
                     {
-                        //Write listing
-                        Console.WriteLine("");
-                        Console.WriteLine(result);
-                        file.WriteLine(result);
+                        //If book is in a surrounding city
+                        if (listing.City.Equals(city, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            //Write listing
+                            Console.WriteLine("");
+                            Console.WriteLine(result);
+                            file.WriteLine(result);
 
-                        totalProfit += listing.HighestOffer - listing.Price;
+                            totalProfit += listing.HighestOffer - listing.Price;
+                        }
                     }
                 }
             }
 
+            //write total profit
             Console.WriteLine("");
             Console.WriteLine(totalProfit);
         }

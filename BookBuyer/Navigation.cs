@@ -10,6 +10,7 @@ namespace BookBuyer
         //Navigates to the next page of search results
         public void NextKslPage(IWebDriver driver, int pageCount)
         {
+            //Init varibles
             string nextButtonXpath = "//a[starts-with(@href, '/search/index?page=" + pageCount + "')]";
             IWebElement nextButton = null;
 

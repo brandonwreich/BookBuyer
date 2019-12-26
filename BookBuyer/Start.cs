@@ -15,7 +15,7 @@ namespace BookBuyer
 
         static void Main(string[] args)
         {
-            //Init varibles
+            //Init driver
             try
             {
                 driver = new ChromeDriver(Directory.GetCurrentDirectory());
@@ -25,6 +25,7 @@ namespace BookBuyer
                 driver = new ChromeDriver(@"C:\Users\knigh\source\repos\BookBuyer");
             }
 
+            //Init varibles
             List<Listing> pageListings = new List<Listing>();
             int pageCount = 1;
 
@@ -51,9 +52,10 @@ namespace BookBuyer
                 {
                     driver.WaitToBeReady(By.XPath(""), 5);
                 }
-                catch (Exception e) { }
+                catch (Exception) { }
             }
 
+            //Compare prices
             Task.WaitAll(Identifier.GetBookDetails(pageListings));
         
             //Exit Browser
