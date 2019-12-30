@@ -38,7 +38,7 @@ namespace BookBuyer
             navigationPage.MaximizeBrower(driver);
 
             //While there is stil a next page
-            while (pageCount < 83)
+            while (pageCount < 4)
             {
                 //Grab book information
                 pageListings.AddRange(infoGrabbingPage.GrabBookInfo(driver));
@@ -56,6 +56,7 @@ namespace BookBuyer
             }
 
             //Compare prices
+            Console.Clear();
             Task.WaitAll(Identifier.GetBookDetails(pageListings));
         
             //Exit Browser
