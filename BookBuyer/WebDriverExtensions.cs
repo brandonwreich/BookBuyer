@@ -53,5 +53,23 @@ namespace BookBuyer
             //Wait
             wait.Until(ExpectedConditions.ElementToBeClickable(by));
         }
+
+        //Checks to see if the Next Button is enabled
+        public static bool IsNextButtonEnabled(this IWebDriver driver, int pageCount)
+        {
+            try
+            {
+                //Find button
+                IWebElement nextButton = driver.FindElement(By.XPath("//a[starts-with(@href, '/search/index?page=" + pageCount + "')]"));
+
+                driver.WaitTillVisible(By.XPath("//a[starts-with(@href, '/search/index?page=" + pageCount + "')]"), 5);
+
+                return true;
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+        }
     }
 }

@@ -4,6 +4,9 @@
     {
         //Title
         public string Title { get; set; }
+
+        //ID
+        public int Id { get; set; }
       
         //Price
         public decimal Price { get; set; }
@@ -13,6 +16,9 @@
 
         //Name of Vendor
         public string Name { get; set; }
+
+        //Email of Vendor
+        public string EmailCanonical { get; set; }
 
         //Title of found book
         public string FoundBookTitle { get; set; }

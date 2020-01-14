@@ -19,7 +19,7 @@ namespace BookBuyer
             IWebElement bookInformation = driver.FindElement(By.XPath(bookInformationXpath));
 
             //Grab information
-            var text = "";
+            string text;
             try
             {
                 text = bookInformation.GetAttribute("innerText");
