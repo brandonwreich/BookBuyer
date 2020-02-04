@@ -26,7 +26,7 @@ namespace BookBuyer
 
             //Init lists
             List<Listing> pageListings = new List<Listing>();
-            List<String> Websites = new List<String> { "https://classifieds.ksl.com/s/Books+and+Media/Books:+Education+and+College", 
+            List<string> Websites = new List<string> { "https://classifieds.ksl.com/s/Books+and+Media/Books:+Education+and+College", 
                 "https://classifieds.ksl.com/s/Books+and+Media/Books:+Religious", 
                 "https://classifieds.ksl.com/s/Books+and+Media/Books:+Non-fiction", 
                 "https://classifieds.ksl.com/s/Books+and+Media/Books:+Fiction", 
@@ -63,10 +63,10 @@ namespace BookBuyer
                     navigationPage.NextKslPage(driver, pageCount);
                     pageCount++;
 
-                    //Wait for 5 Seconds
+                    //Wait for 3 Seconds
                     try
                     {
-                        driver.WaitToBeReady(By.XPath(""), 5);
+                        driver.WaitToBeReady(By.XPath(""), 3);
                     }
                     catch (Exception) { }
                 }
