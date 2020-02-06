@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
+using System.Collections.Generic;
 
 namespace BookBuyer
 {
@@ -57,19 +58,28 @@ namespace BookBuyer
         //Checks to see if the Next Button is enabled
         public static bool IsNextButtonEnabled(this IWebDriver driver, int pageCount)
         {
-            try
-            {
-                //Find button
-                IWebElement nextButton = driver.FindElement(By.XPath("//a[starts-with(@href, '/search/index?page=" + pageCount + "')]"));
+            //Init list
+            List<string> nextButtonList = new List<string> {"/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Education+and+College&page=",
+                "/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Non-fiction&page=",
+                "/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Religious&page=", 
+                "/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Children&page=", 
+                "/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Fiction&page=" };
 
-                driver.WaitTillVisible(By.XPath("//a[starts-with(@href, '/search/index?page=" + pageCount + "')]"), 5);
-
-                return true;
-            }
-            catch(Exception)
+            //Loop through list
+            foreach (var buttonXPath in nextButtonList)
             {
-                return false;
+                try
+                {
+                    //Find button
+                    IWebElement nextButton = driver.FindElement(By.XPath("//a[starts-with(@href, '" + buttonXPath + pageCount +"')]"));
+                    driver.WaitTillVisible(By.XPath("//a[starts-with(@href, '" + buttonXPath + pageCount + "')]"), 5);
+
+                    return true;
+                }
+                catch (Exception) { }
             }
+
+            return false;
         }
     }
 }

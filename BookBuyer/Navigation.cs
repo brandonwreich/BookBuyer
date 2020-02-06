@@ -1,4 +1,6 @@
 ﻿using OpenQA.Selenium;
+using System;
+using System.Collections.Generic;
 
 namespace BookBuyer
 {
@@ -10,37 +12,51 @@ namespace BookBuyer
         //Navigates to the next page of search results
         public void NextKslPage(IWebDriver driver, int pageCount)
         {
-            //Init varibles
-            string nextButtonXpath = "//a[starts-with(@href, '/search/index?page=" + pageCount + "')]";
-            IWebElement nextButton;
+            //Init list
+            List<string> nextButtonList = new List<string> {"/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Education+and+College&page=",
+                "/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Non-fiction&page=",
+                "/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Religious&page=",
+                "/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Children&page=",
+                "/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Fiction&page=" };
 
-            try
+            //Loop through list of XPaths
+            foreach (var buttonXPath in nextButtonList)
             {
-                //Find nextButton
-                driver.WaitTillVisible(By.XPath(nextButtonXpath), 100);
-                nextButton = driver.FindElement(By.XPath(nextButtonXpath));
+                try
+                {
+                    //Init varibles
+                    string nextButtonXpath = "//a[starts-with(@href, '" + buttonXPath + pageCount + "')]";
+                    IWebElement nextButton;
 
-                //Click
-                driver.WaitToBeClickable(By.XPath(nextButtonXpath), 100);
-                nextButton.Click();
-            }
-            catch (StaleElementReferenceException)
-            {
-                //Refind element
-                nextButton = driver.FindElement(By.XPath(nextButtonXpath));
+                    try
+                    {
+                        //Find nextButton
+                        nextButton = driver.FindElement(By.XPath(nextButtonXpath));
 
-                //Click
-                driver.WaitToBeClickable(By.XPath(nextButtonXpath), 100);
-                nextButton.Click();
-            }
-            catch (NoSuchElementException)
-            {
-                //Refind element
-                nextButton = driver.FindElement(By.XPath(nextButtonXpath));
+                        //Click
+                        driver.WaitToBeClickable(By.XPath(nextButtonXpath), 5);
+                        nextButton.Click();
+                    }
+                    catch (StaleElementReferenceException)
+                    {
+                        //Refind element
+                        nextButton = driver.FindElement(By.XPath(nextButtonXpath));
 
-                //Click
-                driver.WaitToBeClickable(By.XPath(nextButtonXpath), 100);
-                nextButton.Click();
+                        //Click
+                        driver.WaitToBeClickable(By.XPath(nextButtonXpath), 5);
+                        nextButton.Click();
+                    }
+                    catch (NoSuchElementException)
+                    {
+                        //Refind element
+                        nextButton = driver.FindElement(By.XPath(nextButtonXpath));
+
+                        //Click
+                        driver.WaitToBeClickable(By.XPath(nextButtonXpath), 5);
+                        nextButton.Click();
+                    }
+                }
+                catch (Exception) { }
             }
         }
 
