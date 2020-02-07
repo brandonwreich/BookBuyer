@@ -35,8 +35,6 @@
         //Isbn13 of book
         public string Isbn13 { get; set; }
 
-        int Confidence { get; set; }
-
         //Highest offer for book
         public decimal HighestOffer { get; set;}
 

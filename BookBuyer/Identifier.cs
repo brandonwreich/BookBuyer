@@ -24,7 +24,6 @@ namespace BookBuyer
             List<string> cityList = new List<string> { "Sandy", "Draper", "Millcreek", "Highland", "slc", "South Jordan",
             "Saratoga Springs", "Midvale", "S Jordan", "Alpine", "Cedar Hills", "Bluffdale", "West Jordan", "Salt Lake City",
             "Riverton", "Orem", "Provo", "American Fork" };
-            List<Listing> notFoundList = new List<Listing>();
 
             //Init varibles
             decimal totalProfit = 0;
@@ -114,14 +113,6 @@ namespace BookBuyer
                             //If listing is not found
                             if (listing.FoundBookTitle == null)
                             {
-                                //If price is low
-                                if (listing.Price <= 20)
-                                {
-                                    //Add to list
-                                    notFoundList.Add(listing);
-                                }
-
-                                //Increment count
                                 unfoundCount++;
                             }
 
@@ -172,19 +163,6 @@ namespace BookBuyer
             Console.WriteLine("");
             Console.WriteLine(totalProfit);
             Console.WriteLine("");
-
-            //Loop through unfound listings
-            foreach (var listing in notFoundList)
-            {
-                string notFound = $"Listing: {listing.Title}, " +
-                    $"ID: {listing.Id}, " +
-                    $"City: {listing.City}, " +
-                    $"Price: {listing.Price}";
-
-                //Write unfound listings
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine(notFound);
-            }
 
             //Write the total number of unfound listings
             Console.ForegroundColor = ConsoleColor.Red;
