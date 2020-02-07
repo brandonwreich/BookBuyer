@@ -154,17 +154,15 @@ namespace BookBuyer
             //Write total profit
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("");
-            Console.WriteLine(totalProfit);
-            Console.WriteLine("");
+            Console.WriteLine("Total profit: $" + totalProfit);
 
             //Write the total number of unfound listings
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("");
-            Console.WriteLine(unfoundCount);
+            Console.WriteLine("Number of books not found: " + unfoundCount);
 
             //Write total number of listings
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine(listingCount);
+            Console.WriteLine("Number of listings collected: " + listingCount);
         }
     }
 }
