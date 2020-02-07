@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
@@ -31,6 +29,7 @@ namespace BookBuyer
             int listingCount = 0;
             file.AutoFlush = true;
 
+            //Loop through listings
             foreach (var listing in listings)
             {
                 try
@@ -102,6 +101,7 @@ namespace BookBuyer
                                 }
                             }
 
+                            //Build output
                             string result = $"Listing: {listing.Title}, " +
                                 $"Isbn: {listing.Isbn}, " +
                                 $"ID: {listing.Id}, " +
@@ -124,13 +124,6 @@ namespace BookBuyer
                                 Console.ForegroundColor = ConsoleColor.Cyan;
                                 Console.WriteLine(result);
                                 file.WriteLine(result);
-
-                                //If profit is higher than $50
-                                if (listing.HighestOffer - listing.Price > 50)
-                                {
-                                    //Compose and send email
-                                    SendEmail(listing.EmailCanonical, listing.Name, listing);
-                                }
 
                                 //Increment total profit
                                 totalProfit += listing.HighestOffer - listing.Price;
@@ -172,52 +165,6 @@ namespace BookBuyer
             //Write total number of listings
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine(listingCount);
-        }
-
-        //Sends an email to the vendor
-        public static void SendEmail(string emailAddress, string name, Listing listing)
-        {
-            //Init varibles
-            var fromAddress = new MailAddress("reichb53@gmail.com", "Brandon Reich");
-            var toAddress = new MailAddress(emailAddress, name);
-            const string fromPassword = "Buyb00ks";
-            const string subject = "KSL Ad";
-            string body;
-
-            //If the listing is free
-            if (listing.Price == 0)
-            {
-                body = "I saw your ad on KSL for '" + listing.Title + "' and was interested in it. My only " +
-                    "question is if it is really free or not. Let me know if you had a price in mind. You can reach me at (801) 357-9780.";
-            }
-            else
-            {
-                body = "I saw your ad on KSL for '" + listing.Title + "' and was interested in buying it. " +
-                    "I have $" + listing.Price + " in cash and can meet anytime. You can reach me on my mobile phone at " +
-                    "(801) 357-9780 to arrange a meeting place.";
-            }
-
-            //Init Smtp
-            var smtp = new SmtpClient
-            {
-                Host = "smtp.gmail.com",
-                Port = 587,
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
-            };
-            using (var message = new MailMessage(fromAddress, toAddress)
-            {
-                //Set subject and body
-                Subject = subject,
-                Body = body
-            })
-            {
-                // Send email
-                smtp.Send(message);
-                Console.WriteLine("Email successfully sent to " + listing.Name);
-            }
         }
     }
 }

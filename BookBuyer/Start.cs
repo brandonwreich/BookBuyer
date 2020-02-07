@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+
 namespace BookBuyer
 {
     class Start
@@ -46,6 +47,7 @@ namespace BookBuyer
                 int pageCount = 1;
                 string xPath = "";
 
+                //Create xPath based upon what page your on
                 switch(caseSwitch)
                 {
                     case 1:
@@ -76,7 +78,7 @@ namespace BookBuyer
                 }
                 catch (Exception) { }
 
-                //While there is stil a next page
+                //While there is still a next page
                 while (driver.IsNextButtonEnabled(pageCount, xPath))
                 {
                     //Grab book information
@@ -94,6 +96,7 @@ namespace BookBuyer
                     catch (Exception) { }
                 }
 
+                //Increment case
                 caseSwitch++;
             }
 
