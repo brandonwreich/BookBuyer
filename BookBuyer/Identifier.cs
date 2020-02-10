@@ -13,7 +13,7 @@ namespace BookBuyer
 {
     public class Identifier
     {
-        static StreamWriter file = File.CreateText("./results.txt");
+        static readonly StreamWriter file = File.CreateText("./results.txt");
         static readonly string key = "3pYHYcs0rIF2KDFDvEq1oQ";
 
         public static async Task GetBookDetails(List<Listing> listings)
@@ -26,7 +26,6 @@ namespace BookBuyer
             //Init varibles
             decimal totalProfit = 0;
             int unfoundCount = 0;
-            int listingCount = 0;
             file.AutoFlush = true;
 
             //Loop through listings
@@ -127,8 +126,6 @@ namespace BookBuyer
                                 //Increment total profit
                                 totalProfit += listing.HighestOffer - listing.Price;
                             }
-
-                            listingCount++;
                         }
                     }
                 }
@@ -161,7 +158,7 @@ namespace BookBuyer
 
             //Write total number of listings
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Number of listings collected: " + listingCount);
+            Console.WriteLine("Number of listings collected: " + listings.Count);
         }
     }
 }

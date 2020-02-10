@@ -1,5 +1,4 @@
-﻿using ArbitrageBot;
-using BookBuyer.Model;
+﻿using BookBuyer.Model;
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
@@ -14,90 +13,69 @@ namespace BookBuyer
         {
             //Init lists
             List<Listing> pageListings = new List<Listing>();
+            List<string> websites = new List<string> { "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Education+and+College&page=", 
+                "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Religious&page=", 
+                "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Non-fiction&page=", 
+                "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Fiction&page=", 
+                "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Children&page=" };
 
             //Init pages
             GatherInformation infoGrabbingPage = new GatherInformation();
-            HelperMethods helperMethods = new HelperMethods();
 
-            //Init variables
-            int collegeTextbookMaxPages = helperMethods.GetCollegeTextbookPageNumber();
-            int religiousMaxPages = helperMethods.GetReligiousMaxPageNumber();
-            int nonFictionMaxPages = helperMethods.GetNonfictionMaxPageNumnber();
-            int fictionMaxPages = helperMethods.GetFictionMaxPageNumber();
-            int childrenMaxPages = helperMethods.GetChildrenMaxPageNumber();
-
-            int pageNumber = 0;
-
-            while (pageNumber <= collegeTextbookMaxPages)
+            //Loop through website list
+            foreach (string website in websites)
             {
-                var url = "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Education+and+College&page={pageNumber}";
+                //Update console
+                Console.WriteLine("Grabbing data...");
+
+                //Init variables
+                int pageNumber = 0;
+
+                var url = website + pageNumber;
                 var web = new HtmlWeb();
                 var doc = web.Load(url);
 
-                var value = doc.DocumentNode.SelectNodes("//script[contains(.,'window.renderSearchSection')]").First().GetDirectInnerText();
-                pageListings.AddRange(infoGrabbingPage.GrabBookInfo(value));
+                int maxPages = FindMaxPageNumber(doc);
 
-                pageNumber++;
+                //While there are still listings
+                while (pageNumber < maxPages)
+                {
+                    try
+                    {
+                        //Init variables
+                        url = website + pageNumber;
+                        web = new HtmlWeb();
+                        doc = web.Load(url);
+
+                        //Find listing information
+                        var value = doc.DocumentNode.SelectNodes("//script[contains(.,'window.renderSearchSection')]").First().GetDirectInnerText();
+                        pageListings.AddRange(infoGrabbingPage.GrabBookInfo(value));
+                    }
+                    catch(ArgumentNullException) 
+                    {
+                        //Update console
+                        Console.WriteLine("Failure to grab data on page " + pageNumber);
+                    }
+
+                    //increment page number
+                    pageNumber++;
+                }
             }
 
-            pageNumber = 0;
-
-            while (pageNumber <= religiousMaxPages)
-            {
-                var url = "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Religious&page={pageNumber}";
-                var web = new HtmlWeb();
-                var doc = web.Load(url);
-
-                var value = doc.DocumentNode.SelectNodes("//script[contains(.,'window.renderSearchSection')]").First().GetDirectInnerText();
-                pageListings.AddRange(infoGrabbingPage.GrabBookInfo(value));
-
-                pageNumber++;
-            }
-
-            pageNumber = 0;
-
-            while (pageNumber <= nonFictionMaxPages)
-            {
-                var url = "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Non-fiction&page={pageNumber}";
-                var web = new HtmlWeb();
-                var doc = web.Load(url);
-
-                var value = doc.DocumentNode.SelectNodes("//script[contains(.,'window.renderSearchSection')]").First().GetDirectInnerText();
-                pageListings.AddRange(infoGrabbingPage.GrabBookInfo(value));
-
-                pageNumber++;
-            }
-
-            pageNumber = 0;
-
-            while (pageNumber <= fictionMaxPages)
-            {
-                var url = "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Fiction&page={pageNumber}";
-                var web = new HtmlWeb();
-                var doc = web.Load(url);
-
-                var value = doc.DocumentNode.SelectNodes("//script[contains(.,'window.renderSearchSection')]").First().GetDirectInnerText();
-                pageListings.AddRange(infoGrabbingPage.GrabBookInfo(value));
-
-                pageNumber++;
-            }
-
-            pageNumber = 0;
-
-            while (pageNumber <= childrenMaxPages)
-            {
-                var url = "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Children&page={pageNumber}";
-                var web = new HtmlWeb();
-                var doc = web.Load(url);
-
-                var value = doc.DocumentNode.SelectNodes("//script[contains(.,'window.renderSearchSection')]").First().GetDirectInnerText();
-                pageListings.AddRange(infoGrabbingPage.GrabBookInfo(value));
-
-                pageNumber++;
-            }
-
+            //Compare book prices
+            Console.WriteLine("");
+            Console.WriteLine("Comparing pricing...");
             Console.WriteLine("");
             Task.WaitAll(Identifier.GetBookDetails(pageListings));
+        }
+
+        //Helper method to find max number of pages
+        public static int FindMaxPageNumber(HtmlDocument doc)
+        {
+            //Find max number of pages
+            var value = doc.DocumentNode.SelectNodes("//*[@title='Go to last page']").First().GetDirectInnerText();
+
+            return Convert.ToInt32(value);
         }
     }
 }
