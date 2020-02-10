@@ -8,26 +8,10 @@ namespace BookBuyer
 {
     class GatherInformation
     {
-        public List<Listing> GrabBookInfo(IWebDriver driver)
+        public List<Listing> GrabBookInfo(string text)
         {
             //Init variables
             Regex regex = new Regex(@"\[{.*}\]");
-            string bookInformationXpath = "//script[contains(.,'window.renderSearchSection')]";
-
-            //Find information
-            driver.WaitToBeReady(By.XPath(bookInformationXpath), 100);
-            IWebElement bookInformation = driver.FindElement(By.XPath(bookInformationXpath));
-
-            //Grab information
-            string text;
-            try
-            {
-                text = bookInformation.GetAttribute("innerText");
-            }
-            catch(StaleElementReferenceException)
-            {
-                text = bookInformation.GetAttribute("innerText");
-            }
 
             //Grab the wanted string
             var info = regex.Match(text).ToString();

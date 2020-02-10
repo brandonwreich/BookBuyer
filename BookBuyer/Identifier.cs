@@ -108,7 +108,7 @@ namespace BookBuyer
                                 $"City: {listing.City}, " +
                                 $"Price: {listing.Price}, " +
                                 $"Offer: {listing.HighestOffer}, " +
-                                $"Profit:{listing.HighestOffer - listing.Price}";
+                                $"Profit: {listing.HighestOffer - listing.Price}";
 
                             //If listing is not found
                             if (listing.FoundBookTitle == null)
@@ -119,7 +119,6 @@ namespace BookBuyer
                             //If listing makes profit
                             if (listing.HighestOffer - listing.Price > 0)
                             {
-
                                 //Write listing
                                 Console.ForegroundColor = ConsoleColor.Cyan;
                                 Console.WriteLine(result);
@@ -142,7 +141,7 @@ namespace BookBuyer
                     $"Isbn: {listing.Isbn}, " +
                     $"Isbn13: {listing.Isbn13}";
 
-                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("");
                     Console.WriteLine(result);
                     Console.WriteLine(x);

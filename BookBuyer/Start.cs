@@ -1,111 +1,103 @@
-﻿using BookBuyer.Model;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
+﻿using ArbitrageBot;
+using BookBuyer.Model;
+using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BookBuyer
 {
     class Start
     {
-        //Declare variables
-        static IWebDriver driver;
-
         static void Main(string[] args)
         {
-            //Init driver
-            try
-            {
-                driver = new ChromeDriver(Directory.GetCurrentDirectory());
-            }
-            catch (InvalidOperationException)
-            {
-                driver = new ChromeDriver(@"C:\Users\knigh\source\repos\BookBuyer");
-            }
-
             //Init lists
             List<Listing> pageListings = new List<Listing>();
-            List<string> Websites = new List<string> {"https://classifieds.ksl.com/s/Books+and+Media/Books:+Education+and+College", 
-                "https://classifieds.ksl.com/s/Books+and+Media/Books:+Religious", 
-                "https://classifieds.ksl.com/s/Books+and+Media/Books:+Non-fiction", 
-                "https://classifieds.ksl.com/s/Books+and+Media/Books:+Fiction", 
-                "https://classifieds.ksl.com/s/Books+and+Media/Books:+Children"};
 
             //Init pages
-            Navigation navigationPage = new Navigation();
             GatherInformation infoGrabbingPage = new GatherInformation();
+            HelperMethods helperMethods = new HelperMethods();
 
             //Init variables
-            int caseSwitch = 1;
+            int collegeTextbookMaxPages = helperMethods.GetCollegeTextbookPageNumber();
+            int religiousMaxPages = helperMethods.GetReligiousMaxPageNumber();
+            int nonFictionMaxPages = helperMethods.GetNonfictionMaxPageNumnber();
+            int fictionMaxPages = helperMethods.GetFictionMaxPageNumber();
+            int childrenMaxPages = helperMethods.GetChildrenMaxPageNumber();
 
-            //Loop through websites
-            foreach (var website in Websites)
+            int pageNumber = 0;
+
+            while (pageNumber <= collegeTextbookMaxPages)
             {
-                //Init variables
-                int pageCount = 1;
-                string xPath = "";
+                var url = "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Education+and+College&page={pageNumber}";
+                var web = new HtmlWeb();
+                var doc = web.Load(url);
 
-                //Create xPath based upon what page your on
-                switch(caseSwitch)
-                {
-                    case 1:
-                       xPath = "/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Education+and+College&page=";
-                        break;
-                    case 2:
-                        xPath = "/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Religious&page=";
-                        break;
-                    case 3:
-                        xPath = "/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Non-fiction&page=";
-                        break;
-                    case 4:
-                        xPath = "/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Fiction&page=";
-                        break;
-                    case 5:
-                        xPath = "/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Children&page=";
-                        break;
-                }
+                var value = doc.DocumentNode.SelectNodes("//script[contains(.,'window.renderSearchSection')]").First().GetDirectInnerText();
+                pageListings.AddRange(infoGrabbingPage.GrabBookInfo(value));
 
-                //Navigate to KSL page
-                navigationPage.NavigateToKslBooksPage(driver, website);
-                navigationPage.MaximizeBrower(driver);
-
-                //Wait 5 seconds
-                try
-                {
-                    driver.WaitToBeReady(By.XPath(""), 5);
-                }
-                catch (Exception) { }
-
-                //While there is still a next page
-                while (driver.IsNextButtonEnabled(pageCount, xPath))
-                {
-                    //Grab book information
-                    pageListings.AddRange(infoGrabbingPage.GrabBookInfo(driver));
-
-                    //Go to next page and increase pageCount
-                    navigationPage.NextKslPage(driver, pageCount, xPath);
-                    pageCount++;
-
-                    //Wait for 3 Seconds
-                    try
-                    {
-                        driver.WaitToBeReady(By.XPath(""), 3);
-                    }
-                    catch (Exception) { }
-                }
-
-                //Increment case
-                caseSwitch++;
+                pageNumber++;
             }
 
-            //Compare prices
-            Console.Clear();
-            Task.WaitAll(Identifier.GetBookDetails(pageListings));
+            pageNumber = 0;
 
-            //Exit Browser
-            navigationPage.ExitBrowser(driver);
+            while (pageNumber <= religiousMaxPages)
+            {
+                var url = "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Religious&page={pageNumber}";
+                var web = new HtmlWeb();
+                var doc = web.Load(url);
+
+                var value = doc.DocumentNode.SelectNodes("//script[contains(.,'window.renderSearchSection')]").First().GetDirectInnerText();
+                pageListings.AddRange(infoGrabbingPage.GrabBookInfo(value));
+
+                pageNumber++;
+            }
+
+            pageNumber = 0;
+
+            while (pageNumber <= nonFictionMaxPages)
+            {
+                var url = "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Non-fiction&page={pageNumber}";
+                var web = new HtmlWeb();
+                var doc = web.Load(url);
+
+                var value = doc.DocumentNode.SelectNodes("//script[contains(.,'window.renderSearchSection')]").First().GetDirectInnerText();
+                pageListings.AddRange(infoGrabbingPage.GrabBookInfo(value));
+
+                pageNumber++;
+            }
+
+            pageNumber = 0;
+
+            while (pageNumber <= fictionMaxPages)
+            {
+                var url = "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Fiction&page={pageNumber}";
+                var web = new HtmlWeb();
+                var doc = web.Load(url);
+
+                var value = doc.DocumentNode.SelectNodes("//script[contains(.,'window.renderSearchSection')]").First().GetDirectInnerText();
+                pageListings.AddRange(infoGrabbingPage.GrabBookInfo(value));
+
+                pageNumber++;
+            }
+
+            pageNumber = 0;
+
+            while (pageNumber <= childrenMaxPages)
+            {
+                var url = "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Children&page={pageNumber}";
+                var web = new HtmlWeb();
+                var doc = web.Load(url);
+
+                var value = doc.DocumentNode.SelectNodes("//script[contains(.,'window.renderSearchSection')]").First().GetDirectInnerText();
+                pageListings.AddRange(infoGrabbingPage.GrabBookInfo(value));
+
+                pageNumber++;
+            }
+
+            Console.WriteLine("");
+            Task.WaitAll(Identifier.GetBookDetails(pageListings));
         }
     }
 }
