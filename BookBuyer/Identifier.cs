@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
@@ -24,7 +23,12 @@ namespace BookBuyer
 
             //Init varibles
             decimal totalProfit = 0;
-            int unfoundCount = 0;
+            decimal totalListings = 0;
+            decimal totalUnfoundCount = 0;
+            decimal totalFoundProfit = 0;
+            decimal totalFound = 0;
+            decimal totalProblem = 0;
+            decimal totalTried = 0;
 
             //Loop through listings
             foreach (var listing in listings)
@@ -35,6 +39,8 @@ namespace BookBuyer
                     foreach (string city in cityList)
                     {
                         var town = listing.City ?? "Unknown";
+
+                        
 
                         //If book is in a surrounding city
                         if (town.Equals(city, StringComparison.InvariantCultureIgnoreCase))
@@ -110,7 +116,13 @@ namespace BookBuyer
                             //If listing is not found
                             if (listing.FoundBookTitle == null)
                             {
-                                unfoundCount++;
+                                //Increment unfound count
+                                totalUnfoundCount++;
+                            }
+                            else
+                            {
+                                //Increment total found
+                                totalFound++;
                             }
 
                             //If listing makes profit
@@ -120,14 +132,54 @@ namespace BookBuyer
                                 Console.ForegroundColor = ConsoleColor.Cyan;
                                 Console.WriteLine(result);
 
-                                //Increment total profit
+                                //Increment total profit and count
                                 totalProfit += listing.HighestOffer - listing.Price;
+                                totalFoundProfit++;
                             }
+
+                            //Increment total tried
+                            totalTried++;
                         }
                     }
                 }
-                catch(Exception x)
+                catch (OperationCanceledException x)
                 {
+                    if (x.CancellationToken.IsCancellationRequested)
+                    {
+                        //Build result
+                        string result = $"Listing: {listing.Title}, " +
+                        $"ID: {listing.Id}, " +
+                        $"City: {listing.City}, " +
+                        $"Price: {listing.Price}, " +
+                        $"Isbn: {listing.Isbn}, " +
+                        $"Isbn13: {listing.Isbn13}";
+
+                        //Print result
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("");
+                        Console.WriteLine(result);
+                        Console.WriteLine("Cancellation Token was called");
+                    }
+                    else
+                    {
+                        //Build result
+                        string result = $"Listing: {listing.Title}, " +
+                        $"ID: {listing.Id}, " +
+                        $"City: {listing.City}, " +
+                        $"Price: {listing.Price}, " +
+                        $"Isbn: {listing.Isbn}, " +
+                        $"Isbn13: {listing.Isbn13}";
+
+                        //Print result
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("");
+                        Console.WriteLine(result);
+                        Console.WriteLine("Timeout error");
+                    }
+                }
+                catch (Exception x)
+                {
+                    //Build result
                     string result = $"Listing: {listing.Title}, " +
                     $"ID: {listing.Id}, " +
                     $"City: {listing.City}, " +
@@ -135,27 +187,46 @@ namespace BookBuyer
                     $"Isbn: {listing.Isbn}, " +
                     $"Isbn13: {listing.Isbn13}";
 
+                    //Print result
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("");
                     Console.WriteLine(result);
                     Console.WriteLine(x);
-                    Console.WriteLine(x.InnerException);
                     Console.WriteLine("");
+
+                    //Increment total problem count
+                    totalProblem++;
                 }
+
+                totalListings++;
             }
+
+            //Caclculate percentages
+            decimal totalFoundProfitPercentage = Math.Round((totalFoundProfit / totalFound) * 100, 2);
+            decimal totalProblemPercentage = Math.Round((totalProblem / totalFound) * 100, 2);
+            decimal totalFoundPercentage = Math.Round((totalFound / totalTried) * 100, 2);
+            decimal totalUnfoundPercentage = Math.Round((totalUnfoundCount / totalTried) * 100, 2);
+            decimal totalTriedPercentage = Math.Round((totalTried / totalListings) * 100, 2);
 
             //Write total profit
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("");
             Console.WriteLine("Total profit: $" + totalProfit);
+            Console.WriteLine("");
 
-            //Write the total number of unfound listings
+            //Write analytics
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine("Total number of listings found that give profit: " + totalFoundProfit + "(" + totalFoundProfitPercentage + "%)");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Total number of problem listings: " + totalProblem + "(" + totalProblemPercentage + "%)");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("Total number of listings found: " + totalFound + "(" + totalFoundPercentage + "%)");
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Number of books not found: " + unfoundCount);
-
-            //Write total number of listings
+            Console.WriteLine("Total number of books not found: " + totalUnfoundCount + "(" + totalUnfoundPercentage + "%)");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("Total number of listings tried: " + totalTried + "(" + totalTriedPercentage + "%)");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Number of listings collected: " + listings.Count);
+            Console.WriteLine("Total number of listings collected: " + totalListings);
         }
     }
 }
