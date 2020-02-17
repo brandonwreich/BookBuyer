@@ -40,8 +40,6 @@ namespace BookBuyer
                     {
                         var town = listing.City ?? "Unknown";
 
-                        
-
                         //If book is in a surrounding city
                         if (town.Equals(city, StringComparison.InvariantCultureIgnoreCase))
                         {
@@ -216,7 +214,7 @@ namespace BookBuyer
 
             //Write analytics
             Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine("Total number of listings found that give profit: " + totalFoundProfit + "(" + totalFoundProfitPercentage + "%)");
+            Console.WriteLine("Total number of profitable listings: " + totalFoundProfit + "(" + totalFoundProfitPercentage + "%)");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Total number of problem listings: " + totalProblem + "(" + totalProblemPercentage + "%)");
             Console.ForegroundColor = ConsoleColor.Cyan;
