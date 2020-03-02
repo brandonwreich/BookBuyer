@@ -13,17 +13,17 @@ namespace BookBuyer
         {
             //Init lists
             List<Listing> pageListings = new List<Listing>();
-            List<string> websites = new List<string> { "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Education+and+College&page=", 
-                "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Religious&page=", 
-                "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Non-fiction&page=", 
-                "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Fiction&page=", 
+            List<string> websites = new List<string> { "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Education+and+College&page=",
+                "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Religious&page=",
+                "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Non-fiction&page=",
+                "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Fiction&page=",
                 "https://classifieds.ksl.com/search?category%5B0%5D=Books+and+Media&subCategory%5B0%5D=Books%3A+Children&page=" };
 
             //Init pages
             GatherInformation infoGrabbingPage = new GatherInformation();
 
             //Loop through website list
-            foreach (string website in websites)
+            foreach(string website in websites)
             {
                 //Update console
                 Console.WriteLine("Grabbing data...");
@@ -38,7 +38,7 @@ namespace BookBuyer
                 int maxPages = FindMaxPageNumber(doc);
 
                 //While there are still listings
-                while (pageNumber <= maxPages)
+                while(pageNumber <= maxPages)
                 {
                     try
                     {
@@ -49,15 +49,18 @@ namespace BookBuyer
 
                         //Find listing information
                         var value = doc.DocumentNode.SelectNodes("//script[contains(.,'window.renderSearchSection')]").First().GetDirectInnerText();
+                        value = value.Substring(value.IndexOf("listings: ") + 10);
+
                         pageListings.AddRange(infoGrabbingPage.GrabBookInfo(value));
+
                     }
-                    catch(ArgumentNullException) 
+                    catch (Exception x)
                     {
                         //Update console
-                        Console.WriteLine("Failure to grab data on page " + pageNumber);
+                        Console.WriteLine("Failure to grab data on page " + pageNumber + ". " + x.Message);
                     }
 
-                    //increment page number
+                    //Increment page number
                     pageNumber++;
                 }
             }

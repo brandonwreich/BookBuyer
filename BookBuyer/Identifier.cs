@@ -31,17 +31,17 @@ namespace BookBuyer
             decimal totalTried = 0;
 
             //Loop through listings
-            foreach (var listing in listings)
+           foreach(var listing in listings)
             {
                 try
                 {
                     //Loop through cities
-                    foreach (string city in cityList)
+                    foreach(string city in cityList)
                     {
                         var town = listing.City ?? "Unknown";
 
                         //If book is in a surrounding city
-                        if (town.Equals(city, StringComparison.InvariantCultureIgnoreCase))
+                        if(town.Equals(city, StringComparison.InvariantCultureIgnoreCase))
                         {
                             var httpClient = new HttpClient();
                             var encoded = HttpUtility.UrlEncode(listing.Title);
@@ -50,14 +50,14 @@ namespace BookBuyer
 
                             listing.HighestOffer = 0;
 
-                            if (response.IsSuccessStatusCode)
+                            if(response.IsSuccessStatusCode)
                             {
                                 var raw = await response.Content.ReadAsStringAsync();
                                 Regex regex = new Regex(@"(?<=type=\""Book\"">\n    <id type=\""integer\"">)\d*(?=</id>)");
                                 id = regex.Match(raw).ToString();
                             }
 
-                            if (id != null && id != "")
+                            if(id != null && id != "")
                             {
                                 var response2 = await httpClient.GetAsync($"https://www.goodreads.com/book/show.xml?id={id}&key={key}");
 
@@ -75,21 +75,21 @@ namespace BookBuyer
 
                             var isbn = listing.Isbn ?? listing.Isbn13;
 
-                            if (isbn != null && isbn != "")
+                            if(isbn != null && isbn != "")
                             {
                                 isbn = isbn.Replace("-", "");
                                 httpClient.DefaultRequestHeaders.Add("authority", "www.bookfinder.com");
                                 var response3 = await httpClient.GetAsync($"https://www.bookfinder.com/buyback/affiliate/{isbn}.mhtml");
                                 var raw3 = await response3.Content.ReadAsStringAsync();
 
-                                if (response3.IsSuccessStatusCode)
+                                if(response3.IsSuccessStatusCode)
                                 {
                                     var jobject = JObject.Parse(raw3);
                                     listing.OfferBookTitle = jobject.GetValue("title").ToString();
                                     var offers = jobject.GetValue("offers");
                                     var test1 = offers.Children();
 
-                                    foreach (var child in offers.Children().ToList())
+                                    foreach(var child in offers.Children().ToList())
                                     {
                                         var test = child.Children().FirstOrDefault();
 
@@ -112,7 +112,7 @@ namespace BookBuyer
                                 $"Profit: {listing.HighestOffer - listing.Price}";
 
                             //If listing is not found
-                            if (listing.FoundBookTitle == null)
+                            if(listing.FoundBookTitle == null)
                             {
                                 //Increment unfound count
                                 totalUnfoundCount++;
@@ -124,7 +124,7 @@ namespace BookBuyer
                             }
 
                             //If listing makes profit
-                            if (listing.HighestOffer - listing.Price > 0)
+                            if(listing.HighestOffer - listing.Price > 0)
                             {
                                 //Write listing
                                 Console.ForegroundColor = ConsoleColor.Cyan;
@@ -140,9 +140,10 @@ namespace BookBuyer
                         }
                     }
                 }
-                catch (OperationCanceledException x)
+                catch(OperationCanceledException x)
                 {
-                    if (x.CancellationToken.IsCancellationRequested)
+                    //If the operation was cancelled
+                    if(x.CancellationToken.IsCancellationRequested)
                     {
                         //Build result
                         string result = $"Listing: {listing.Title}, " +
@@ -175,7 +176,7 @@ namespace BookBuyer
                         Console.WriteLine("Timeout error");
                     }
                 }
-                catch (Exception x)
+                catch(Exception x)
                 {
                     //Build result
                     string result = $"Listing: {listing.Title}, " +
@@ -196,6 +197,7 @@ namespace BookBuyer
                     totalProblem++;
                 }
 
+                //Increment total listings
                 totalListings++;
             }
 
