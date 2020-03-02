@@ -38,7 +38,7 @@ namespace BookBuyer
                 int maxPages = FindMaxPageNumber(doc);
 
                 //While there are still listings
-                while(pageNumber <= maxPages)
+                while(pageNumber < maxPages)
                 {
                     try
                     {
